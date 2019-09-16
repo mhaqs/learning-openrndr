@@ -1,0 +1,11 @@
+rootProject.name = 'openrndr-processing'
+
+include 'simple-particle-system',
+        'multiple-particle-systems',
+        'flocking',
+        'forces-with-vectors',
+        'substrate',
+        'binary-ring',
+        'particle-flow',
+        'wobbly-swarm',
+        'rorshach'
