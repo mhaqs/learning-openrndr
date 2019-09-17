@@ -1,27 +1,27 @@
-import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.DrawPrimitive
 import org.openrndr.draw.Drawer
 import org.openrndr.draw.VertexBuffer
-import org.openrndr.draw.shadeStyle
 import org.openrndr.draw.vertexBuffer
 import org.openrndr.draw.vertexFormat
 import org.openrndr.extra.noise.perlinLinear
 import org.openrndr.math.Vector2
 import org.openrndr.math.Vector3
-import org.openrndr.shape.shape
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.floor
-import kotlin.math.max
 import kotlin.math.sin
 import kotlin.random.Random
 
-class RorschachShape(private var shapeSize: Double, private var noiseMagnitudeFactor: Double, vertexcount: Double, noisedistancescale: Double, noisetimescale: Double) {
+class RorschachShape(private var shapeSize: Double, private var noiseMagnitudeFactor: Double, vertexcount: Double = floor(0.75 * shapeSize), noisedistancescale: Double = shapeSize / 320.0, noisetimescale: Double = 0.0005) {
     var centerPosition = createVector()
     var rotationAngle = 0.0
-    private var vertexCount = max(vertexcount, floor(0.75 * shapeSize))
-    private var noiseDistanceScale = max(noisedistancescale, shapeSize / 320.0)
-    private var noiseTimeScale = max(noisetimescale, 0.0005)
+    private var vertexCount = vertexcount
+    val geometry: VertexBuffer = vertexBuffer(
+            vertexFormat {
+                position(3)
+            }, vertexCount.toInt())
+    private var noiseDistanceScale = noisedistancescale
+    private var noiseTimeScale = noisetimescale
     private var xNoiseParameterOffset = createVector(Random.nextDouble(), Random.nextDouble()).times(1240.0)
     private var yNoiseParameterOffset = createVector(Random.nextDouble(), Random.nextDouble()).times(1240.0)
     private var noiseTime = 0.0
@@ -51,14 +51,10 @@ class RorschachShape(private var shapeSize: Double, private var noiseMagnitudeFa
         val noiseMagnitude = noiseMagnitudeFactor * 0.5 * shapeSize
         var currentBasePositionX = -0.5 * shapeSize
         val basePositionIntervalDistance = shapeSize / vertexCount
-        val progressRatio = 0.0
-        val geometry: VertexBuffer = vertexBuffer(
-                vertexFormat {
-                    position(3)
-                }, vertexCount.toInt())
+        val progressRatio = frameCounter.getProgressRatio()
         geometry.put {
             for (i in 0 until vertexCount.toInt()) {
-                val distanceFactor = progressRatio * sin((i / vertexCount) * PI) * (sin((i / vertexCount) * PI))
+                val distanceFactor = progressRatio * sin((i / vertexCount) * PI) * (frameCounter.sin((i / vertexCount) * PI))
                 val noiseX = (2 * perlinLinear(0, xNoiseParameterOffset.x + noiseDistanceScale * currentBasePositionX, xNoiseParameterOffset.y + noiseTime) - 1) * noiseMagnitude
                 val noiseY = (2 * perlinLinear(0, yNoiseParameterOffset.x + noiseDistanceScale * currentBasePositionX, yNoiseParameterOffset.y + noiseTime) - 1) * noiseMagnitude
                 val vertexPositionX = currentBasePositionX + distanceFactor * noiseX
@@ -91,10 +87,13 @@ class RorschachShape(private var shapeSize: Double, private var noiseMagnitudeFa
     }
 
     companion object {
-        @JvmStatic var isNotInitialized: Boolean = true
-        @JvmStatic var temporalVector = Vector2(0.0, 0.0)
+        @JvmStatic
+        var isNotInitialized: Boolean = true
+        @JvmStatic
+        var temporalVector = Vector2(0.0, 0.0)
 
-        @JvmStatic fun initializeStatic() {
+        @JvmStatic
+        fun initializeStatic() {
             temporalVector = Vector2(0.0, 0.0)
             isNotInitialized = false
         }

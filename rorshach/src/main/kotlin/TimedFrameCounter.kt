@@ -24,9 +24,9 @@ class TimedFrameCounter(on: Boolean, duration: Double = 0.0, private var complet
     }
 
     fun getProgressRatio(): Double {
-        return if (durationFrameCount > 0)
-            (count / durationFrameCount).coerceIn(0.0, 1.0)
-        else
-            0.0
+        return when {
+            durationFrameCount > 0 -> (count / durationFrameCount).coerceIn(0.0, 1.0)
+            else -> 0.0
+        }
     }
 }

@@ -100,7 +100,7 @@ internal class Boid(x: Double, y: Double) {
         drawer.stroke = ColorRGBa.WHITE
         drawer.isolated {
             drawer.translate(position.x, position.y)
-            drawer.rotate(theta)
+            drawer.rotate(theta)                 //todo: fix boid rotation
             geometry.put {
                 val v1 = Vector3(0.0, -r * 2, 0.0)
                 val v2 = Vector3(-r, r * 2, 0.0)

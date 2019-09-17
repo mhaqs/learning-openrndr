@@ -2,32 +2,31 @@ import kotlin.math.PI
 import kotlin.math.sin
 
 open class FrameCounter {
-    protected var count: Int
+    protected var count: Int = 0
 
     init {
         if (isNotInitialized)
             println("FrameCounter is not initialized.")
-        this.count = 0
     }
 
-    fun resetCount(count: Int = 0) {
-        this.count = count
+    fun resetCount(cnt: Int = 0) {
+        count = cnt
     }
 
     open fun step() {
-        this.count += 1
+        count += 1
     }
 
     fun mod(divisor: Int): Int {
-        return this.count % divisor
+        return count % divisor
     }
 
     /**
      * Returns ratio from 0 to 1 according to current frame count and given frequency per second.
      * @param frequency {number} - frequency per second
      */
-    fun getCycleProgressRatio(frequency: Int): Double {
-        return ((frequency * this.count) % frameRate) / frameRate
+    fun getCycleProgressRatio(frequency: Double): Double {
+        return ((frequency * count) % frameRate) / frameRate
     }
 
     /**
@@ -35,8 +34,8 @@ open class FrameCounter {
      * current frame count and given frequency per second.
      * @param frequency {number} - frequency per second
      */
-    fun sin(frequency: Int = 1): Double {
-        return sin(this.getCycleProgressRatio(frequency) * (2 * PI))
+    fun sin(frequency: Double = 1.0): Double {
+        return kotlin.math.sin(getCycleProgressRatio(frequency) * (2 * PI))
     }
 
     companion object {
