@@ -39,23 +39,26 @@ class Example : Program() {
         image = loadImage("file:data/images/pollockShimmering.gif")
         extend(NoClear()) {
             backdrop = {
-                this@Example.drawer.image(image)
+                this@Example.drawer.background(ColorRGBa.WHITE)
             }
         }
         takeColor()
         begin()
-        drawer.background(ColorRGBa.WHITE)
         mouse.buttonDown.listen {
             begin()
-            drawer.background(ColorRGBa.WHITE)
         }
     }
 
     override fun draw() {
         // crack all cracks
+        val circles: ArrayList<Circle> = ArrayList()
         for (n in 0 until num) {
-            cracks[n]?.move(drawer)
+            cracks[n]?.move(drawer, circles)
         }
+        // draw black crack
+        drawer.stroke = ColorRGBa.BLACK.opacify(0.85)
+        drawer.fill = null
+        drawer.circles(circles)
     }
 
     private fun begin() {
@@ -85,8 +88,8 @@ class Example : Program() {
     private fun takeColor() {
         for (x in 0 until image.width) {
             for (y in 0 until image.height) {
-                val c = ColorRGBa(Random.nextDouble(255.0), Random.nextDouble(255.0), Random.nextDouble(255.0))
-                //val c = image.shadow[x,y] <-- need a way to get pixel data in openrndr
+                image.shadow.download()
+                val c = image.shadow[x,y]
                 var exists = false
                 for (n in 0 until numpal) {
                     if (c == goodcolor[n]) {

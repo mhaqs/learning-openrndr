@@ -16,15 +16,15 @@ class Example: Program() {
     var r = 0.0
 
     override fun draw() {
-        drawer.background(ColorRGBa(242.0, 242.0, 242.0))
+        drawer.background(ColorRGBa(242.0 / 255, 242.0 / 255, 242.0 / 255))
         drawer.translate(300.0, 300.0)
         drawer.rotate(rot)
         for (i in 0 until 500) {
             circle = 200 + 50 * sin(System.currentTimeMillis() * freq * i)
             col = map(150.0, 250.0, 255.0, 60.0, circle)
             r = map(150.0, 250.0, 5.0, 2.0, circle)
-            drawer.fill = ColorRGBa(col / 255, 0.0, 0.74)
-            drawer.stroke = ColorRGBa(col / 255, 0.0, 0.74)
+            drawer.fill = ColorRGBa(col / 255, 0.0, 74.0/255)
+            drawer.stroke = ColorRGBa(col / 255, 0.0, 74.0/ 255)
             drawer.circle(circle * cos(i.toDouble()), circle * sin(i.toDouble()), r)
             rot += 0.00005
         }

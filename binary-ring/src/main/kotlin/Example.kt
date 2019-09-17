@@ -3,8 +3,6 @@ import org.openrndr.Program
 import org.openrndr.color.ColorRGBa
 import org.openrndr.configuration
 import org.openrndr.extra.noclear.NoClear
-import org.openrndr.shape.Composition
-import org.openrndr.shape.CompositionDrawer
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -25,13 +23,10 @@ var blackout = false
 
 // kaons is array of path tracing particles
 var kaons = arrayOfNulls<Particle>(num)
-//val compositionDrawer = CompositionDrawer()
-////lateinit var composition: Composition
 class Example : Program() {
     override fun setup() {
         extend(NoClear())
         drawer.background(ColorRGBa.BLACK)
-        //composition = compositionDrawer.composition
         // begin with particle sling-shot around ring origin
         for (i in 0 until num) {
             val emitx = (30 * sin((2 * PI) * i / num) + dim / 2).toInt()

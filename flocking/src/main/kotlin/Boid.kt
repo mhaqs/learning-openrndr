@@ -1,4 +1,3 @@
-
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.DrawPrimitive
 import org.openrndr.draw.Drawer
@@ -12,6 +11,7 @@ import org.openrndr.draw.vertexBuffer
 import org.openrndr.draw.vertexFormat
 import org.openrndr.math.Vector2
 import org.openrndr.math.Vector3
+import org.openrndr.math.transforms.transform
 import org.openrndr.shape.shape
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -83,7 +83,7 @@ internal class Boid(x: Double, y: Double) {
 
         // Above two lines of code below could be condensed with new Vector2 setMag() method
         // Not using this method until Processing.js catches up
-        // desired.setMag(maxspeed);
+        // desired.setMag(maxspeed)
 
         // Steering = Desired minus Velocity
         var steer: Vector2 = desired.minus(velocity)
@@ -102,9 +102,9 @@ internal class Boid(x: Double, y: Double) {
             drawer.translate(position.x, position.y)
             drawer.rotate(theta)
             geometry.put {
-                val v1 = Vector3(0.0, -r * 2, 0.0);
-                val v2 = Vector3(-r, r * 2, 0.0);
-                val v3 = Vector3(r, r * 2, 0.0);
+                val v1 = Vector3(0.0, -r * 2, 0.0)
+                val v2 = Vector3(-r, r * 2, 0.0)
+                val v3 = Vector3(r, r * 2, 0.0)
                 write(v1, v2, v3)
             }
             drawer.vertexBuffer(geometry, DrawPrimitive.TRIANGLES)
@@ -153,7 +153,7 @@ internal class Boid(x: Double, y: Double) {
         if (steer.length > 0) {
             // First two lines of code below could be condensed with new Vector2 setMag() method
             // Not using this method until Processing.js catches up
-            // steer.setMag(maxspeed);
+            // steer.setMag(maxspeed)
 
             // Implement Reynolds: Steering = Desired - Velocity
 
@@ -182,7 +182,7 @@ internal class Boid(x: Double, y: Double) {
             sum /= count
             // First two lines of code below could be condensed with new Vector2 setMag() method
             // Not using this method until Processing.js catches up
-            // sum.setMag(maxspeed);
+            // sum.setMag(maxspeed)
 
             // Implement Reynolds: Steering = Desired - Velocity
 

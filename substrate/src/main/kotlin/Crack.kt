@@ -57,7 +57,7 @@ internal class Crack {
         y += 0.61 * sin(directionOfTravel * PI / 180)
     }
 
-    fun move(drawer: Drawer) {
+    fun move(drawer: Drawer, circles: ArrayList<Circle>) {
         // continue cracking
         x += 0.42 * cos(directionOfTravel * PI / 180)
         y += 0.42 * sin(directionOfTravel * PI / 180)
@@ -70,9 +70,7 @@ internal class Crack {
         // draw sand painter
         regionColor(drawer)
 
-        // draw black crack
-        drawer.stroke = ColorRGBa.BLACK.opacify(0.85)
-        drawer.circle(Vector2(x + Random.nextDouble(-z, z), y + Random.nextDouble(-z, z)), 1.0)
+        circles.add(Circle(Vector2(x + Random.nextDouble(-z, z), y + Random.nextDouble(-z, z)), 1.0))
 
         if ((cx >= 0) && (cx < dimx) && (cy >= 0) && (cy < dimy)) {
             // safe to check

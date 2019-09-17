@@ -22,11 +22,11 @@ internal class SandPainter {
 
         // lay down grains of sand (transparent pixels)
         val w = g / (grains - 1)
-        val circles = ArrayList<Circle>()
+        val circles: ArrayList<Circle> = ArrayList()
         for (i in 0 until grains) {
-            val a = 0.1 - i / (grains * 10.0)
-            drawer.stroke = c.opacify(a * 1.0)
-            //drawer.stroke= null
+            val a = 1.0 - i / (grains * 10.0)
+            drawer.stroke = c.opacify(a)
+            drawer.fill = null
             circles.add(Circle(Vector2(ox + (x - ox) * sin(sin(i * w)), oy + (y - oy) * sin(sin(i * w))), 1.0))
         }
         drawer.circles(circles)
