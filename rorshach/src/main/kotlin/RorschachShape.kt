@@ -1,11 +1,15 @@
+import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.DrawPrimitive
 import org.openrndr.draw.Drawer
 import org.openrndr.draw.VertexBuffer
+import org.openrndr.draw.isolated
 import org.openrndr.draw.vertexBuffer
 import org.openrndr.draw.vertexFormat
 import org.openrndr.extra.noise.perlinLinear
 import org.openrndr.math.Vector2
 import org.openrndr.math.Vector3
+import org.openrndr.shape.Circle
+import org.openrndr.shape.shape
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.floor
@@ -41,8 +45,10 @@ class RorschachShape(private var shapeSize: Double, private var noiseMagnitudeFa
             return
         drawer.translate(centerPosition.x, centerPosition.y)
         drawer.rotate(rotationAngle)
-        drawVertices(drawer, +1.0)
-        drawVertices(drawer, -1.0)
+//        drawVertices(drawer, +1.0)
+//        drawVertices(drawer, -1.0)
+        drawLines(drawer, +1.0)
+        drawLines(drawer, -1.0)
         drawer.rotate(-rotationAngle)
         drawer.translate(-centerPosition.x, -centerPosition.y)
     }
@@ -54,9 +60,9 @@ class RorschachShape(private var shapeSize: Double, private var noiseMagnitudeFa
         val progressRatio = frameCounter.getProgressRatio()
         geometry.put {
             for (i in 0 until vertexCount.toInt()) {
-                val distanceFactor = progressRatio * sin((i / vertexCount) * PI) * (frameCounter.sin((i / vertexCount) * PI))
-                val noiseX = (2 * perlinLinear(0, xNoiseParameterOffset.x + noiseDistanceScale * currentBasePositionX, xNoiseParameterOffset.y + noiseTime) - 1) * noiseMagnitude
-                val noiseY = (2 * perlinLinear(0, yNoiseParameterOffset.x + noiseDistanceScale * currentBasePositionX, yNoiseParameterOffset.y + noiseTime) - 1) * noiseMagnitude
+                val distanceFactor = progressRatio * sin((i / vertexCount) * PI) * (sin((i / vertexCount) * PI))
+                val noiseX = (2 * perlinLinear(vertexCount.toInt(), xNoiseParameterOffset.x + noiseDistanceScale * currentBasePositionX, xNoiseParameterOffset.y + noiseTime) - 1) * noiseMagnitude
+                val noiseY = (2 * perlinLinear(vertexCount.toInt(), yNoiseParameterOffset.x + noiseDistanceScale * currentBasePositionX, yNoiseParameterOffset.y + noiseTime) - 1) * noiseMagnitude
                 val vertexPositionX = currentBasePositionX + distanceFactor * noiseX
                 val vertexPositionY = yScaleFactor * distanceFactor * (0.3 * shapeSize + noiseY)
                 write(Vector3(vertexPositionX, vertexPositionY, 0.0))
@@ -66,7 +72,31 @@ class RorschachShape(private var shapeSize: Double, private var noiseMagnitudeFa
                 currentBasePositionX += basePositionIntervalDistance
             }
         }
-        drawer.vertexBuffer(geometry, DrawPrimitive.TRIANGLES)
+        drawer.vertexBuffer(geometry, DrawPrimitive.POINTS)
+    }
+
+    fun drawLines(drawer: Drawer, yScaleFactor: Double) {
+        val noiseMagnitude = noiseMagnitudeFactor * 0.5 * shapeSize
+        var currentBasePositionX = -0.5 * shapeSize
+        val basePositionIntervalDistance = shapeSize / vertexCount
+        val progressRatio = frameCounter.getProgressRatio()
+        val c = shape {
+                contour {
+                    for (i in 0 until vertexCount.toInt()) {
+                        val distanceFactor = progressRatio * sin((i / vertexCount) * PI) * (sin((i / vertexCount) * PI))
+                        val noiseX = (2 * perlinLinear(vertexCount.toInt(), xNoiseParameterOffset.x + noiseDistanceScale * currentBasePositionX, xNoiseParameterOffset.y + noiseTime) - 1) * noiseMagnitude
+                        val noiseY = (2 * perlinLinear(vertexCount.toInt(), yNoiseParameterOffset.x + noiseDistanceScale * currentBasePositionX, yNoiseParameterOffset.y + noiseTime) - 1) * noiseMagnitude
+                        val vertexPositionX = currentBasePositionX + distanceFactor * noiseX
+                        val vertexPositionY = yScaleFactor * distanceFactor * (0.3 * shapeSize + noiseY)
+                        moveOrLineTo(vertexPositionX, vertexPositionY)
+                        var rotatedVertexPosition = Vector2(vertexPositionX, vertexPositionY)
+                        rotatedVertexPosition = rotate(rotatedVertexPosition, rotationAngle)
+                        checkScreen(drawer, centerPosition.x + rotatedVertexPosition.x, centerPosition.y + rotatedVertexPosition.y)
+                        currentBasePositionX += basePositionIntervalDistance
+                    }
+                }
+            }
+        drawer.shape(c)
     }
 
     fun checkScreen(drawer: Drawer, absolutePositionX: Double, absolutePositionY: Double) {
@@ -87,10 +117,8 @@ class RorschachShape(private var shapeSize: Double, private var noiseMagnitudeFa
     }
 
     companion object {
-        @JvmStatic
-        var isNotInitialized: Boolean = true
-        @JvmStatic
-        var temporalVector = Vector2(0.0, 0.0)
+        @JvmStatic var isNotInitialized: Boolean = true
+        @JvmStatic var temporalVector = Vector2(0.0, 0.0)
 
         @JvmStatic
         fun initializeStatic() {

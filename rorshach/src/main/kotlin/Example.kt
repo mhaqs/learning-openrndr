@@ -15,16 +15,14 @@ lateinit var frameCounter: TimedFrameCounter
 var looping = true
 class Example : Program() { 
     private val idealFrameRAte = 60.0
-    private var unitLength = min(1000, 1000) / 640.0
+    private var unitLength: Double = 0.0
     var unitSpeed = unitLength / idealFrameRAte
     private val fontPath = "Bellefair-Regular.ttf"
     private var currentFontSize = 14 * unitLength
     var bgColor = ColorRGBa(0.98, 0.98, 0.98)
 
     private lateinit var rorschachShape: RorschachShape
-    private lateinit var rorschachShapeColor: NoFillShapeColor
     private lateinit var currentFont: FontImageMap
-    private lateinit var sign: () -> Unit
     override fun setup() {
         extend(NoClear()) {
             backdrop = {
@@ -32,11 +30,11 @@ class Example : Program() {
             }
         }
         //drawer.frameRate(IDEAL_FRAME_RATE)
+        unitLength = min(width, height) / 640.0
         drawer.strokeWeight = max(1.0, 1.0 * unitLength)
-        FrameCounter.initializeStatic(idealFrameRAte)
+        TimedFrameCounter.initializeStatic(idealFrameRAte)
         frameCounter = TimedFrameCounter(true, 13 * idealFrameRAte, completeBehavior = { looping = false })
         currentFont = FontImageMap.fromUrl("file:data/fonts/$fontPath", currentFontSize)
-        sign = createSignFunction(200 * unitLength, 20 * unitLength, currentFontSize, NoStrokeShapeColor(ColorRGBa.BLACK),  NoStrokeShapeColor(bgColor), "Rorschach " + Date().toString() + "  -  FAL")
         initialize()
         mouse.buttonDown.listen {
             initialize()
@@ -46,23 +44,9 @@ class Example : Program() {
     override fun draw() {
         if (looping) {
             rorschachShape.step()
-            rorschachShapeColor.aply(drawer)
+            drawer.stroke = ColorRGBa.GRAY.opacify(0.22)
             rorschachShape.draw(drawer)
-            sign()
             frameCounter.step()
-        }
-    }
-
-    private fun createSignFunction(xMargin: Double, yMargin: Double, textSize: Double, textColor: NoStrokeShapeColor, textBackgroundColor: NoStrokeShapeColor, titleText: String): () -> Unit{
-        val textAreaHeight = yMargin + textSize * 1.1
-        val leftX = width - xMargin
-        val topY = height - textAreaHeight
-        val baseLineY = height - yMargin
-        return {
-            textBackgroundColor.aply(drawer)
-            drawer.rectangle(leftX, topY, xMargin, textAreaHeight)
-            textColor.aply(drawer)
-            drawer.text(titleText, leftX, baseLineY)
         }
     }
 
@@ -77,7 +61,6 @@ class Example : Program() {
         )
         rorschachShape.centerPosition = Vector2(0.5 * width, 0.48 * height)
         rorschachShape.rotationAngle = PI + PI / 2
-        rorschachShapeColor = NoFillShapeColor(ColorRGBa(0.0, Random.nextDouble(.03, 0.18), 0.0))
         frameCounter.resetCount()
         frameCounter.on()
         looping = true

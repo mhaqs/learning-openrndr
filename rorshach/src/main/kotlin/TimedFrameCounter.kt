@@ -1,8 +1,14 @@
-class TimedFrameCounter(on: Boolean, duration: Double = 0.0, private var completeBehavior: () -> Unit): FrameCounter() {
+class TimedFrameCounter(on: Boolean, duration: Double = 0.0, private var completeBehavior: () -> Unit) {
     private var durationFrameCount = duration
     private var isCompleted = false
     private var isOn = on
-    
+    private var count: Int = 0
+
+    init {
+        if (isNotInitialized)
+            println("FrameCounter is not initialized.")
+    }
+
     fun on(duration: Double = 0.0) {
         isOn = true
         if (duration > 0)
@@ -12,7 +18,11 @@ class TimedFrameCounter(on: Boolean, duration: Double = 0.0, private var complet
         isOn = false
     }
 
-    override fun step() {
+    fun resetCount(cnt: Int = 0) {
+        count = cnt
+    }
+
+    fun step() {
         if (!isOn)
             return
         count += 1
@@ -25,8 +35,18 @@ class TimedFrameCounter(on: Boolean, duration: Double = 0.0, private var complet
 
     fun getProgressRatio(): Double {
         return when {
-            durationFrameCount > 0 -> (count / durationFrameCount).coerceIn(0.0, 1.0)
+            durationFrameCount > 0 -> (count / durationFrameCount)
             else -> 0.0
+        }
+    }
+
+    companion object {
+        @JvmStatic var isNotInitialized: Boolean = true
+        @JvmStatic var frameRate = 0.0
+
+        @JvmStatic fun initializeStatic(frameRates: Double) {
+            frameRate = frameRates
+            isNotInitialized = false
         }
     }
 }
