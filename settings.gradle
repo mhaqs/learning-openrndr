@@ -1,4 +1,4 @@
-rootProject.name = 'openrndr-processing'
+rootProject.name = 'learning-openrndr'
 
 include 'simple-particle-system',
         'multiple-particle-systems',
@@ -8,4 +8,6 @@ include 'simple-particle-system',
         'binary-ring',
         'particle-flow',
         'wobbly-swarm',
-        'rorshach'
+        'rorshach',
+        'box-fitting-img',
+        'physics'

@@ -23,6 +23,7 @@ val geometry: VertexBuffer = vertexBuffer(
         vertexFormat {
             position(3)
         }, 3)
+
 internal class Boid(x: Double, y: Double) {
     private var position: Vector2
     private var velocity: Vector2
@@ -63,7 +64,7 @@ internal class Boid(x: Double, y: Double) {
     // Method to update position
     fun update() {
         // Update velocity
-        velocity +=acceleration
+        velocity += acceleration
 
         // Limit speed
         velocity = limit(velocity, maxspeed)
@@ -114,7 +115,7 @@ internal class Boid(x: Double, y: Double) {
     // Wraparound
     fun borders(drawer: Drawer) {
         if (position.x < -r) position = Vector2(drawer.width + r, position.y)
-        if (position.y < -r) position = Vector2(position.x,drawer.height + r)
+        if (position.y < -r) position = Vector2(position.x, drawer.height + r)
         if (position.x > drawer.width + r) position = Vector2(-r, position.y)
         if (position.y > drawer.height + r) position = Vector2(position.x, -r)
     }

@@ -17,6 +17,7 @@ class Example: Program() {
 
     override fun setup() {
         font = FontImageMap.fromUrl("file:data/fonts/Roboto-Medium.ttf", 16.0)
+        drawer.fontMap = font
         liquid = Liquid(0.0, (height / 2).toDouble(), width.toDouble(), (height / 2).toDouble(), 0.1)
         mouse.buttonDown.listen {
             reset();
@@ -25,7 +26,6 @@ class Example: Program() {
 
     override fun draw() {
         drawer.background(ColorRGBa.BLACK)
-        drawer.fontMap = font
         // Draw water
         liquid.display(drawer)
 
