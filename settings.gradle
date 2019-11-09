@@ -10,4 +10,6 @@ include 'simple-particle-system',
         'wobbly-swarm',
         'rorshach',
         'box-fitting-img',
-        'physics'
+        'physics',
+        'ink-blot',
+        'processing-mode'
