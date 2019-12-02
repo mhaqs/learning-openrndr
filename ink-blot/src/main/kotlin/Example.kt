@@ -50,7 +50,8 @@ class Example : Program() {
         drawer.fill = ColorRGBa.PINK
         drawer.stroke = ColorRGBa.WHITE
         //drawer.triangle(0.0, 0.0, 200.0, 200.0, -200.0, 200.0)
-        drawer.triangle(PositionMode.CENTER, listOf(Vector3(640.0, 360.0, 0.0),  Vector3(840.0, 360.0, 0.0),  Vector3(540.0, 160.0, 0.0)))
+        drawer.triangle(PositionMode.CENTER, listOf(Vector3(width / 2.0, height / 2.0, 0.0),  Vector3(width + 100 /2.0, height / 2.0, 0.0),  Vector3(width + 50 / 2.0, height - 100 / 2.0, 0.0)))
+        drawer.triangle(PositionMode.CORNER, listOf(Vector3(width / 2.0, height / 2.0, 0.0),  Vector3(width + 100 /2.0, height / 2.0, 0.0),  Vector3(width + 50 / 2.0, height - 100 / 2.0, 0.0)))
 //        if (!still) {
 //            drawer.apply {
 //                background(ColorRGBa.WHITE)

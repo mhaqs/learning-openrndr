@@ -67,14 +67,16 @@ fun Drawer.triangle(v1: Vector3, v2: Vector3, v3: Vector3) {
 
 fun Drawer.triangle(positionMode: PositionMode, points: List<Vector3>) {
     var center = Vector3(0.0, 0.0, 0.0)
-    points.forEach {
-        center += it
+    if(positionMode == PositionMode.CENTER) {
+        points.forEach {
+            center += it
+        }
+        center /= points.size.toDouble()
     }
-    center /= points.size.toDouble()
 
     val geometry = vertexBuffer(vertexFormat {
         position(3)
-    }, 3)
+    }, points.size)
 
     geometry.put {
         write(Vector3(points[0].x - center.x, points[0].y - center.y, 0.0),
